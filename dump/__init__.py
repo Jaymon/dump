@@ -9,18 +9,28 @@ def console():
 
     return -- integer -- the exit code
     '''
-    parser = argparse.ArgumentParser(description="backup/restore PostgreSQL databases")
+    parser = argparse.ArgumentParser(description="backup/restore PostgreSQL databases", add_help=False)
     parser.add_argument("-v", "--version", action='version', version="%(prog)s {}".format(__version__))
-    #parser.add_argument("command", help="the command to run", default="", choices=set(["backup", "restore"]))
-    args, command_args = parser.parse_known_args()
 
-    sub_parser = argparse.ArgumentParser(description="backup a PostgreSQL database", add_help=False)
-    sub_parser.add_argument("-d", "--dbname", dest="dbname", help="database name to connect to")
-    sub_parser.add_argument("-U", "--username", dest="username", help="database user name")
-    sub_parser.add_argument("-W", "--password", dest="password", help="database password")
-    sub_parser.add_argument("-h", "--host", dest="host", default="localhost", help="database server host or socket directory")
-    sub_parser.add_argument("-p", "--port", type=int, default=5432, dest="port", help="database server post")
-    sub_parser.add_argument("--help", action="store_true", dest="help", help="show this help screen")
+    parent_parser = argparse.ArgumentParser(add_help=False)
+    parent_parser.add_argument("-d", "--dbname", dest="dbname", help="database name to connect to")
+    parent_parser.add_argument("-U", "--username", dest="username", help="database user name")
+    parent_parser.add_argument("-W", "--password", dest="password", help="database password")
+    parent_parser.add_argument("-h", "--host", dest="host", default="localhost", help="database server host or socket directory")
+    parent_parser.add_argument("-p", "--port", type=int, default=5432, dest="port", help="database server post")
+    parent_parser.add_argument("--help", action="help", default=argparse.SUPPRESS, help="show this help message and exit")
+
+    subparsers = parser.add_subparsers(dest="command", help="a sub command")
+    backup_parser = subparsers.add_parser("backup", parents=[parent_parser], help="backup a PostgreSQL database", add_help=False)
+    backup_parser.add_argument("-D", "--dir", dest="directory", help="directory where the backup files should go")
+
+    restore_parser = subparsers.add_parser("restore", parents=[parent_parser], help="restore a PostgreSQL database", add_help=False)
+    restore_parser.add_argument("-D", "--dir", dest="directory", help="directory where the backup files are located")
+
+    args = parser.parse_args()
+
+    pout.v(args)
+    return 0
 
     if args.command == "backup":
 

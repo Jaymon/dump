@@ -37,7 +37,7 @@ class DumpTest(unittest.TestCase):
         self.assertLess(0, c.code)
 
     def test_backup(self):
-        c = Client("backup --dbname vagrant --username vagrant --password vagrant")
+        c = Client("backup --dbname vagrant --username vagrant --password vagrant --dir /tmp")
         pout.v(c.output)
 
 
