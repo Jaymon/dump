@@ -57,7 +57,6 @@ class Postgres(object):
         # let's unzip all the files in the dir
         path = os.path.join(self.directory, '*')
         self._run_cmd('gunzip {}'.format(path), ignore_ret_code=True)
-#         truncated_tables = set()
 
         sql_files = []
         for root, dirs, files in os.walk(self.directory):
@@ -73,17 +72,13 @@ class Postgres(object):
             if m:
                 table = m.group(1)
                 print '------- restoring table {}'.format(table)
-                # truncate the table (only do this once per table)
-#                 if table not in truncated_tables:
-#                     self._run_queries(['TRUNCATE {} CASCADE'.format(table)])
-#                     truncated_tables.add(table)
 
                 #psql_args = self._get_args('psql', '-X', '--echo-queries', '-f {}'.format(path))
                 psql_args = self._get_args('psql', '-X', '--quiet', '-f {}'.format(path))
                 self._run_cmd(' '.join(psql_args))
 
                 # restore the sequence
-                self._restore_auto_increment(table)
+                #self._restore_auto_increment(table)
                 print '------- restored table {}'.format(table)
 
         return True
@@ -100,6 +95,7 @@ class Postgres(object):
             "--table={}".format(table),
             #"--data-only",
             "--clean",
+            "--no-owner",
             "--column-inserts",
         )
         cmd = ' '.join(cmd)
