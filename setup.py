@@ -25,7 +25,7 @@ setup(
     author='Jay Marcyes',
     author_email='jay@marcyes.com',
     url='http://github.com/jaymon/{}'.format(name),
-    packages=[name, '{}.postgres'.format(name)],
+    packages=[name], #'{}.postgres'.format(name)],
     #py_modules=[name],
     license="MIT",
     #install_requires=['Jinja2', 'markdown'],
