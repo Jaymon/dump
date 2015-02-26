@@ -1,6 +1,26 @@
 import argparse
 
+import postgres
+
 __version__ = '0.0.1'
+
+
+def console_backup(args):
+    kwargs = vars(args)
+    tables = kwargs.pop("tables")
+
+    db = postgres.Postgres(**kwargs)
+    for table in tables:
+        db.table_dump(table)
+
+    return 0
+
+
+def console_restore(args):
+    kwargs = vars(args)
+    db = postgres.Postgres(**kwargs)
+    db.restore()
+    return 0
 
 
 def console():
@@ -22,15 +42,18 @@ def console():
 
     subparsers = parser.add_subparsers(dest="command", help="a sub command")
     backup_parser = subparsers.add_parser("backup", parents=[parent_parser], help="backup a PostgreSQL database", add_help=False)
-    backup_parser.add_argument("-D", "--dir", dest="directory", help="directory where the backup files should go")
+    backup_parser.add_argument("-D", "--dir", "--directory", dest="directory", help="directory where the backup files should go")
+    backup_parser.add_argument("tables", nargs="+")
+    backup_parser.set_defaults(func=console_backup)
 
     restore_parser = subparsers.add_parser("restore", parents=[parent_parser], help="restore a PostgreSQL database", add_help=False)
-    restore_parser.add_argument("-D", "--dir", dest="directory", help="directory where the backup files are located")
+    restore_parser.add_argument("-D", "--dir", "--directory", dest="directory", help="directory where the backup files are located")
+    restore_parser.set_defaults(func=console_restore)
 
     args = parser.parse_args()
+    ret_code = args.func(args)
 
-    pout.v(args)
-    return 0
+    return ret_code
 
     if args.command == "backup":
 
