@@ -10,14 +10,20 @@ import os
 import random
 
 import prom
-
-
+import testdata
 
 
 class Foo(prom.Orm):
     schema = prom.Schema(
         "foo",
         bar=prom.Field(int),
+        #che=prom.Field(str)
+    )
+
+class Bar(prom.Orm):
+    schema = prom.Schema(
+        "bar",
+        foo=prom.Field(int),
         #che=prom.Field(str)
     )
 
@@ -56,7 +62,8 @@ class DumpTest(unittest.TestCase):
         self.assertLess(0, c.code)
 
     def test_full_table_backup_and_restore(self):
-        directory = os.path.join("/", "tmp", "full-table-backup-{}".format(random.randint(1, 100000)))
+        directory = testdata.create_dir("full-table-backup")
+        #directory = os.path.join("/", "tmp", "full-table-backup-{}".format(random.randint(1, 100000)))
         for x in range(100):
             f = Foo(bar=x)
             f.set()
@@ -74,12 +81,18 @@ class DumpTest(unittest.TestCase):
 
         self.setUpClass()
         c = Client("restore --dbname vagrant --username vagrant --password vagrant --dir {}".format(directory))
-        pout.v(c.output)
         self.assertEqual(100, Foo.query.count())
 
-#         root, dirs, files = os.walk(directory).next()
-#         for f in files:
-#             os.remove(os.path.join(root, files))
+    def test_multi_table_backup(self):
+        directory = testdata.create_dir("multi-table-backup")
+        for x in range(10):
+            f = Foo(bar=x)
+            f.set()
+            b = Bar(foo=x)
+            b.set()
+
+        c = Client("backup --dbname vagrant --username vagrant --password vagrant --dir {} foo bar".format(directory))
+        pout.v(c.output)
 
 
 if __name__ == '__main__':

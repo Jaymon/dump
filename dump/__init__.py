@@ -2,7 +2,8 @@ import argparse
 
 import postgres
 
-__version__ = '0.0.1'
+
+__version__ = '0.0.2'
 
 
 def console_backup(args):
@@ -30,7 +31,7 @@ def console():
     return -- integer -- the exit code
     '''
     parser = argparse.ArgumentParser(description="backup/restore PostgreSQL databases", add_help=False)
-    parser.add_argument("-v", "--version", action='version', version="%(prog)s {}".format(__version__))
+    parser.add_argument("--version", action='version', version="%(prog)s {}".format(__version__))
 
     parent_parser = argparse.ArgumentParser(add_help=False)
     parent_parser.add_argument("-d", "--dbname", dest="dbname", help="database name to connect to")
@@ -59,7 +60,7 @@ def console():
 
         sub_parser.add_argument("-D", "--dir", dest="directory", help="directory where the backup files should go")
         sub_args = sub_parser.parse_args(command_args)
-        pout.v(sub_args, sub_args.dbname)
+        #pout.v(sub_args, sub_args.dbname)
 
     elif args.command == "restore":
 
@@ -72,34 +73,4 @@ def console():
 
     ret_code = 0
     return ret_code
-
-#     if args.script:
-#         s = Script(args.script)
-#         try:
-#             ret_code = s.run(command_args)
-#             if not ret_code:
-#                 ret_code = 0
-# 
-#         except Exception as e:
-#             echo.exception(e)
-#             ret_code = 1
-# 
-#     else:
-#         basepath = os.getcwd()
-#         print "Available scripts in {}:".format(basepath)
-#         for root_dir, dirs, files in os.walk(basepath, topdown=True):
-#             for f in fnmatch.filter(files, '*.py'):
-#                 filepath = os.path.join(root_dir, f)
-#                 s = Script(filepath)
-#                 if s.is_cli():
-#                     rel_filepath = s.call_path(basepath)
-#                     print "\t{}".format(rel_filepath)
-#                     desc = s.description
-#                     if desc:
-#                         for l in desc.split("\n"):
-#                             print "\t\t{}".format(l)
-# 
-#                     print ""
-# 
-#     return ret_code
 
