@@ -18,6 +18,7 @@ import subprocess
 import os, time
 import tempfile
 
+
 class Postgres(object):
     """wrapper to dump postgres tables"""
 
@@ -41,6 +42,12 @@ class Postgres(object):
         self.password = password
         self.host = host 
         self.port = port
+
+        # make sure we have the needed stuff
+        self._run_cmd("which psql")
+        self._run_cmd("which pg_dump")
+        self._run_cmd("which gzip")
+
 
     def __del__(self):
         # cleanup by getting rid of all the temporary files
