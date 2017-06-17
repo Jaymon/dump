@@ -1,3 +1,4 @@
+from __future__ import print_function
 import argparse
 
 import postgres
@@ -68,7 +69,7 @@ def console():
         sub_args = sub_parser.parse_args(command_args)
 
     else:
-        print "This should be the help part that prints out all the commands"
+        print("This should be the help part that prints out all the commands")
 
 
     ret_code = 0

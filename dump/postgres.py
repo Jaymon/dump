@@ -13,6 +13,7 @@ http://stackoverflow.com/questions/2094963/postgresql-improving-pg-dump-pg-resto
 other links:
 http://blog.kimiensoftware.com/2011/05/compare-pg_dump-and-gzip-compression-241
 """
+from __future__ import print_function
 import re
 import subprocess
 import os, time
@@ -78,7 +79,7 @@ class Postgres(object):
             m = r.match(f)
             if m:
                 table = m.group(1)
-                print '------- restoring table {}'.format(table)
+                print('------- restoring table {}'.format(table))
 
                 #psql_args = self._get_args('psql', '-X', '--echo-queries', '-f {}'.format(path))
                 psql_args = self._get_args('psql', '-X', '--quiet', '-f {}'.format(path))
@@ -86,7 +87,7 @@ class Postgres(object):
 
                 # restore the sequence
                 #self._restore_auto_increment(table)
-                print '------- restored table {}'.format(table)
+                print('------- restored table {}'.format(table))
 
         return True
 
@@ -94,7 +95,7 @@ class Postgres(object):
         """dump all the rows of the given table name"""
         if not table: raise ValueError("no table")
 
-        print '------- dumping table {}'.format(table)
+        print('------- dumping table {}'.format(table))
         pipes = ["gzip"]
         outfile_path = self._get_outfile_path(table)
         cmd = self._get_args(
@@ -110,7 +111,7 @@ class Postgres(object):
         cmd += ' > {}'.format(outfile_path)
 
         self._run_cmd(cmd)
-        print '------- dumped table {}'.format(table)
+        print('------- dumped table {}'.format(table))
         return True
 
     def _get_file(self):
@@ -159,7 +160,7 @@ class Postgres(object):
         return self.env
 
     def _run_cmd(self, cmd, ignore_ret_code=False, popen_kwargs=None):
-        print cmd
+        print(cmd)
 
         env = self._get_env()
         kwargs = {
