@@ -25,7 +25,7 @@ setup(
     author='Jay Marcyes',
     author_email='jay@marcyes.com',
     url='http://github.com/jaymon/{}'.format(name),
-    packages=find_packages()
+    packages=find_packages(),
     #py_modules=[name],
     license="MIT",
     #install_requires=[],
