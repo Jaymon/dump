@@ -23,8 +23,3 @@ Use pip:
 
     pip install dump
 
-
-## License
-
-MIT
-
