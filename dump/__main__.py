@@ -54,6 +54,7 @@ def console():
     )
 
     subparsers = parser.add_subparsers(dest="command", help="a sub command")
+    subparsers.required = True # https://bugs.python.org/issue9253#msg186387
     backup_parser = subparsers.add_parser(
         "backup",
         parents=[parent_parser],
